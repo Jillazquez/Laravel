@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProyectoRequest;
 use App\Http\Requests\UpdateProyectoRequest;
 use App\Models\Proyecto;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Profesor;
 
 class ProyectoController extends Controller
 {
@@ -54,20 +55,29 @@ class ProyectoController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Proyecto $proyecto)
-    {
-        return view('proyectos.edit', compact('proyecto'));
-    }
+{
+    $profesores = Profesor::all(); // Cargar todos los profesores existentes
+    $profesoresSeleccionados = $proyecto->profesores->pluck('id')->toArray(); // Profesores asignados al proyecto
+
+    return view('proyectos.edit', compact('proyecto', 'profesores', 'profesoresSeleccionados'));
+}
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateProyectoRequest $request, Proyecto $proyecto)
     {
-        $datos = request()->input();
+        $datos = $request->all();
+
         $proyecto->update($datos);
-        session()->flash('mensaje','Proyecto actualizado');
+    
+        if ($request->has('profesores')) {
+            $proyecto->profesores()->sync($request->profesores);
+        }
+        session()->flash('mensaje', 'Proyecto actualizado');
         return redirect()->route('proyectos.index');
     }
+    
 
     /**
      * Remove the specified resource from storage.

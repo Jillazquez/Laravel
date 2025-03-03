@@ -26,6 +26,23 @@
                     </div>
                 </div>
 
+                <!-- Selección de Profesores -->
+                <div class="mt-4">
+                    <x-input-label for="profesores" value="Asignar Profesores" />
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        @foreach($profesores as $profesor)
+                            <label class="flex items-center">
+                                <input type="checkbox" 
+                                       name="profesores[]" 
+                                       value="{{ $profesor->id }}"
+                                       @if(in_array($profesor->id, $profesoresSeleccionados)) checked @endif>
+                                <span class="ml-2">{{ $profesor->nombre }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Botones de Guardar/Cancelar -->
                 <div class="flex flex-row justify-between p-3 mt-4">
                     <button class="btn btn-warning" type="submit">Guardar</button>
                     <a href="{{ route('proyectos.index') }}" class="btn btn-warning">Cancelar</a>

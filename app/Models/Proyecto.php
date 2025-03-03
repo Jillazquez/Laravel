@@ -14,4 +14,9 @@ class Proyecto extends Model
     protected $timestamp = true;
     
     protected $fillable = ["titulo","horas_previstas","fecha_comienzo"];
+
+    public function profesores()
+    {
+        return $this->belongsToMany(Profesor::class);
+    }
 }
